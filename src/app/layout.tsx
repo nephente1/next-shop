@@ -23,7 +23,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${montserratSans.variable} grid grid-rows-[auto_0px_1fr_auto] min-h-screen w-full font-[family-name:var(--font-montserrat)]`}
+        className={`${montserratSans.variable} grid grid-rows-[auto_1fr_auto] min-h-screen w-full font-[family-name:var(--font-montserrat)]`}
       >
         <ReduxProvider>
           <Header />
