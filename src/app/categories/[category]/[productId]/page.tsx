@@ -7,18 +7,20 @@ import AddToCartButton from '@/app/components/AddToCartButton';
 import ErrorComponent from '@/app/components/ErrorComponent';
 import { config } from '@/config';
 
-const ProductDetails = async ({ params }: { params: { productId: string; category: string } }) => {
+const ProductDetails = async ({ params }: { params: Promise<{ productId: string; category: string }> }) => {
   const { productId, category } = await params;
   const mainProduct = await getProduct(productId);
 
-  let movieProduct;
-  if (category === 'movies') {
-    const movieResponse = await fetch(`${config.apiUrl}/api/movies/${productId}`); // wywołanie poprzez api/movies/[id]/route
-    if (!movieResponse.ok) {
-      return <ErrorComponent subject="product" />;
-    }
-    movieProduct = await movieResponse.json();
-  }
+  const movieProduct =
+    category === 'movies'
+      ? await (async () => {
+          const movieResponse = await fetch(`${config.apiUrl}/api/movies/${productId}`);
+          if (!movieResponse.ok) {
+            return <ErrorComponent subject="product" />;
+          }
+          return movieResponse.json();
+        })()
+      : null;
 
   const productDetails: ProductData | MoviesTypes = movieProduct || mainProduct;
 

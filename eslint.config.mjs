@@ -2,7 +2,7 @@ import { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { FlatCompat } from '@eslint/eslintrc';
 import js from '@eslint/js';
-import nextPlugin from "@next/eslint-plugin-next"; // Plugin Next.js
+import nextPlugin from '@next/eslint-plugin-next'; // Plugin Next.js
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -13,7 +13,6 @@ const compat = new FlatCompat({
 });
 
 const eslintConfig = [
-  
   ...compat.extends('eslint:recommended'),
   // Konfiguracja dla Next.js
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
@@ -33,9 +32,9 @@ const eslintConfig = [
   // Dodatkowe reguły
   {
     plugins: {
-      "@next/next": nextPlugin,
+      '@next/next': nextPlugin,
     },
-    
+
     rules: {
       semi: 'warn',
       'prettier/prettier': 'warn',
@@ -46,15 +45,9 @@ const eslintConfig = [
       'prefer-arrow-callback': 'error',
       'react/display-name': 'off',
       'react-hooks/exhaustive-deps': 'warn',
-      "@typescript-eslint/no-explicit-any": "warn",
-      '@typescript-eslint/no-unused-vars': [
-        "warn",
-        {
-          vars: "all",
-          caughtErrors: "all",
-          ignoreRestSiblings: true,
-        },
-      ],
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      ...nextPlugin.configs.recommended.rules,
     },
   },
 ];

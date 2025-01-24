@@ -1,28 +1,52 @@
 // GET /api/movies/:id
-import { moviesList } from '@/utils/utils';
-import { NextResponse } from 'next/server';
+import { config } from '@/config';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: Request, { params }: { params: { id: string } }) {
-  const { id } = await params;
+export async function GET(request: NextRequest) {
+  const url = request.url;
+  const id = url.split('/').pop(); // Pobiera ostatni element z URL
 
-  // Dodaj kategorię i cenę do każdego filmu
-  const moviesWithCategory = moviesList.map((movie) => ({
-    ...movie,
-    category: 'movies',
-    price: 100,
-  }));
+  try {
+    // Pobierz dane z pliku public/database.json
+    const response = await fetch(`${config.apiUrl}/database.json`);
+    if (!response.ok) {
+      throw new Error('Failed to fetch data');
+    }
 
-  // Znajdź film po ID
-  const movieItem = moviesWithCategory.find((movie) => movie.id === id);
+    const data = await response.json();
+    const moviesList = data.moviesList; // Zakładamy, że dane są w formacie { movies: [...] }
 
-  // Jeśli film nie został znaleziony, zwróć błąd 404 - w tym wypadku obsługuje to plikiem error.tsx w folderze [productId]
-  // if (!movieItem) {
-  //   return NextResponse.json({ error: 'Movie not found' }, { status: 404 });
-  // }
+    // Dodaj kategorię i cenę do każdego filmu
+    const moviesWithCategory = moviesList.map((movie) => ({
+      ...movie,
+      category: 'movies',
+      price: 100,
+    }));
 
-  // Zwróć znaleziony film
-  const response = NextResponse.json(movieItem);
-  // Ustaw nagłówek Cache-Control na 60 sekund
-  response.headers.set('Cache-Control', 'public, max-age=60');
-  return response;
+    const movieItem = moviesWithCategory.find((movie) => movie.id === id);
+
+    // Zwróć dane jako odpowiedź JSON
+    return NextResponse.json(movieItem);
+  } catch (error) {
+    console.error('Error:', error);
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  }
+
+  // // Dodaj kategorię i cenę do każdego filmu
+  // const moviesWithCategory = moviesList.map((movie) => ({
+  //   ...movie,
+  //   category: 'movies',
+  //   price: 100,
+  // }));
+
+  // const movieItem = moviesWithCategory.find((movie) => movie.id === id);
+
+  // // Jeśli film nie został znaleziony, zwróć błąd 404 - w tym wypadku obsługuje to plikiem error.tsx w folderze [productId]
+  // // if (!movieItem) {
+  // //   return NextResponse.json({ error: 'Movie not found' }, { status: 404 });
+  // // }
+
+  // const response = NextResponse.json(movieItem);
+  // response.headers.set('Cache-Control', 'public, max-age=60');
+  // return response;
 }

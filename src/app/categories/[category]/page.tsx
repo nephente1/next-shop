@@ -4,7 +4,7 @@ import { BoxItem } from '@/app/components/BoxItem';
 import ErrorComponent from '@/app/components/ErrorComponent';
 import { ProductData } from '@/redux/cartStore';
 
-const CategoryPage = async ({ params }: { params: { category: string } }) => {
+const CategoryPage = async ({ params }: { params: Promise<{ category: string }> }) => {
   const { category } = await params;
   const categoryName = await decodeURIComponent(category);
   const categoryProducts = await getCategoryProducts(category);

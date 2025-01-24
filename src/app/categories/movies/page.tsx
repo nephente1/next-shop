@@ -6,9 +6,14 @@ import { config } from '@/config';
 const MoviesPage = async () => {
   // const moviesList = await getMovies(); // Wywołanie funkcję getMovies (tylko w server components)
   const response = await fetch(`${config.apiUrl}/api/movies`); // wywołanie poprzez api/movies/route
-  const moviesList = await response.json();
 
-  const displayMovieslist = moviesList.map((el: MoviesTypes) => (
+  const textResponse = await response.text(); // Odczytaj odpowiedź jako tekst
+
+const moviesList2 = JSON.parse(textResponse); // Próbuj analizować jako JSON
+  const moviesList = await response;
+  console.log('moviesList2',  moviesList2);
+
+  const displayMovieslist = moviesList2.map((el: MoviesTypes) => (
     <BoxItem
       key={Number(el.id)}
       productData={el}
