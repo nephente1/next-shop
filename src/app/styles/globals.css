@@ -12,7 +12,6 @@
   margin: 0;
 }
 
-
 @layer components {
   .container {
     @apply flex gap-6 flex-wrap max-w-5xl w-full px-5;
@@ -29,5 +28,6 @@
     @apply rounded-md border border-transparent px-3 py-1.5 font-medium bg-pink-600 cursor-pointer text-gray-100 min-h-min hover:bg-pink-800 w-fit text-base;
   }
   .button {
-    @apply border border-sky-600 bg-transparent text-sky-600 px-2 py-1  cursor-pointer hover:bg-sky-600 w-fit hover:text-white;}
+    @apply border border-sky-600 bg-transparent text-sky-600 px-2 py-1  cursor-pointer hover:bg-sky-600 w-fit hover:text-white;
+  }
 }

@@ -1,7 +1,7 @@
 'use client'; // Oznacz komponent jako Client Component
 
 import { Provider } from 'react-redux';
-import { persistor, store } from "../../redux/store";
+import { persistor, store } from '../../redux/store';
 import { PersistGate } from 'redux-persist/integration/react';
 
 export default function ReduxProvider({ children }: { children: React.ReactNode }) {
@@ -11,5 +11,5 @@ export default function ReduxProvider({ children }: { children: React.ReactNode 
         {children}
       </PersistGate>
     </Provider>
-  )
+  );
 }

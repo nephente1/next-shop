@@ -1,33 +1,29 @@
-'use client'
+'use client';
 
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
-import { rootReducer } from "./rootReducer";
+import { rootReducer } from './rootReducer';
 import { persistStore, persistReducer } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; 
-// import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+// import storage from 'redux-persist/lib/storage';
+import createWebStorage from 'redux-persist/lib/storage/createWebStorage';
 
+//*** configuration to avoid error: redux-persist failed to create sync storage. falling back to noop storage. ***//
+const createNoopStorage = () => {
+  return {
+    getItem() {
+      return Promise.resolve(null);
+    },
+    setItem(value: unknown) {
+      return Promise.resolve(value);
+    },
+    removeItem() {
+      return Promise.resolve();
+    },
+  };
+};
 
-//*** configuration to avoid error: redux-persist failed to create sync storage. falling back to noop storage. ***/
-// const createNoopStorage = () => {
-//   return {
-//     getItem(_key: any) {
-//       return Promise.resolve(null);
-//     },
-//     setItem(_key: any, value: any) {
-//       return Promise.resolve(value);
-//     },
-//     removeItem(_key: any) {
-//       return Promise.resolve();
-//     },
-//   };
-// };
-
-  // create alternative storage:
-// const storage =
-//   typeof window !== "undefined"
-//     ? createWebStorage("local")
-//     : createNoopStorage();
+// create alternative storage:
+const storage = typeof window !== 'undefined' ? createWebStorage('local') : createNoopStorage();
 //*** end ***/
 
 // Configuration redux-persist
@@ -39,13 +35,12 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const defaultMiddlewareConfig = {
-  serializableCheck: false
+  serializableCheck: false,
 };
 
 export const store = configureStore({
   reducer: persistedReducer,
-  middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware(defaultMiddlewareConfig),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware(defaultMiddlewareConfig),
 });
 
 const makeStore = () => store;

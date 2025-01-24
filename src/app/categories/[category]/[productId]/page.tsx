@@ -1,20 +1,29 @@
-import * as React from 'react';
 import { getProduct } from '@/app/api/api';
 import Image from 'next/image';
 import BackButton from '@/app/components/BackButton';
-import { getMovie, MoviesTypes } from '@/app/api/movies/route';
+import { MoviesTypes } from '@/app/api/movies/route';
 import { ProductData } from '@/redux/cartStore';
 import AddToCartButton from '@/app/components/AddToCartButton';
 import ErrorComponent from '@/app/components/ErrorComponent';
+import { config } from '@/config';
 
-const ProductDetails = async ({ params }: { params: { productId: string, category: string } }) => {
+const ProductDetails = async ({ params }: { params: { productId: string; category: string } }) => {
   const { productId, category } = await params;
-  const movie = await getMovie(productId)
+  const mainProduct = await getProduct(productId);
 
-  const productDetails: ProductData | MoviesTypes = category === 'movies' ? movie : await getProduct(productId);
+  let movieProduct;
+  if (category === 'movies') {
+    const movieResponse = await fetch(`${config.apiUrl}/api/movies/${productId}`); // wywołanie poprzez api/movies/[id]/route
+    if (!movieResponse.ok) {
+      return <ErrorComponent subject="product" />;
+    }
+    movieProduct = await movieResponse.json();
+  }
+
+  const productDetails: ProductData | MoviesTypes = movieProduct || mainProduct;
 
   if (!productDetails) {
-    return <ErrorComponent subject="product" />
+    return <ErrorComponent subject="product" />;
   }
 
   return (
@@ -33,21 +42,21 @@ const ProductDetails = async ({ params }: { params: { productId: string, categor
 
         <div className="flex flex-col text-left lg:ml-12">
           <div className="h-80 w-80 relative">
-            <Image 
-              fill={true} 
+            <Image
+              fill={true}
               priority={true}
-              className="object-contain" 
+              className="object-contain"
               sizes="(max-width: 320px) 100vw, (max-width: 1200px) 320px"
-              title={productDetails.title} 
-              alt={productDetails.title} 
-              src={productDetails?.image?.startsWith('http') ? productDetails.image : `/images/${productDetails.image}`} 
+              title={productDetails.title}
+              alt={productDetails.title}
+              src={productDetails?.image?.startsWith('http') ? productDetails.image : `/images/${productDetails.image}`}
             />
           </div>
         </div>
       </div>
-      <AddToCartButton productDetails={productDetails}/>
+      <AddToCartButton productDetails={productDetails} />
     </>
   );
-}
+};
 
 export default ProductDetails;

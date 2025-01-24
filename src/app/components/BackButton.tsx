@@ -10,6 +10,8 @@ export default function BackButton() {
   };
 
   return (
-    <button onClick={handleBack} className="button">Go Back</button>
+    <button onClick={handleBack} className="button">
+      Go Back
+    </button>
   );
 }

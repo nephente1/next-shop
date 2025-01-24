@@ -1,11 +1,11 @@
-import axios from "axios";
+import axios from 'axios';
 
-export const url = "https://fakestoreapi.com"
+export const url = 'https://fakestoreapi.com';
 
 export const instance = axios.create({
-	baseURL: url,
+  baseURL: url,
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
   },
 });
 
