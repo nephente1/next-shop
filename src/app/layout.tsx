@@ -8,6 +8,11 @@ import './styles/globals.css';
 const montserratSans = Montserrat({
   variable: '--font-montserrat',
   subsets: ['latin'],
+  weight: ['400', '500', '700'],
+  style: ['normal'],
+  display: 'swap', // Zapewnia natychmiastowe wyświetlenie tekstu z czcionką zastępczą
+  preload: true, // Wstępne ładowanie czcionki (domyślnie true)
+  fallback: ['sans-serif'],
 });
 
 export const metadata: Metadata = {

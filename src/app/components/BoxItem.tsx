@@ -20,7 +20,7 @@ export const BoxItem = async (props: BoxItemPropsType) => {
 
   return (
     <a
-      href={`/categories/${category}/${id ?? ''}`}
+      href={`/categories/${category}/${id}`}
       style={{ textDecoration: 'none' }}
       className="border border-sky-400 p-5 m-2 radius flex flex-wrap flex-col justify-between items-center shadow-lg basis-60 flex-auto cursor-pointer hover:border-pink-600"
     >
@@ -30,14 +30,15 @@ export const BoxItem = async (props: BoxItemPropsType) => {
       <div className="relative max-w-40 max-h-40 w-40 h-40 my-2">
         <Image
           fill={true}
-          priority={true}
-          sizes={'160'}
+          sizes="160px"
           className="object-contain"
           placeholder="blur"
           blurDataURL={blurDataURL || undefined}
-          title={title}
           alt={title}
           src={image}
+          quality={50}
+          priority
+          loading="eager"
         />
       </div>
       <p className="text-sky-600 text-xl mb-2">

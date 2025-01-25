@@ -1,13 +1,19 @@
 import axios from 'axios';
+import { setupCache } from 'axios-cache-interceptor';
 
 export const url = 'https://fakestoreapi.com';
 
-export const instance = axios.create({
-  baseURL: url,
-  headers: {
-    'Content-Type': 'application/json',
+export const instance = setupCache(
+  axios.create({
+    baseURL: url,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  }),
+  {
+    ttl: 1000 * 60 * 5, // Cache ważny przez 5 minut
   },
-});
+);
 
 // Getting all categories from fake store API
 export const getCategories = async () => {

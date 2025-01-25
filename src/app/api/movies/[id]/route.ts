@@ -8,7 +8,9 @@ export async function GET(request: NextRequest) {
 
   try {
     // Pobierz dane z pliku public/database.json
-    const response = await fetch(`${config.apiUrl}/database.json`);
+    const response = await fetch(`${config.apiUrl}/database.json`, {
+      cache: 'force-cache',
+    });
     if (!response.ok) {
       throw new Error('Failed to fetch data');
     }
@@ -26,7 +28,9 @@ export async function GET(request: NextRequest) {
     const movieItem = moviesWithCategory.find((movie) => movie.id === id);
 
     // Zwróć dane jako odpowiedź JSON
-    return NextResponse.json(movieItem);
+    return NextResponse.json(movieItem, {
+      headers: { 'Cache-Control': 'public, max-age=0, must-revalidate' },
+    });
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

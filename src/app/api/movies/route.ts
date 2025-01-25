@@ -15,7 +15,9 @@ export type MoviesTypes = {
 // W Next.js 15 endpointy API muszą eksportować funkcje o nazwach odpowiadających metodom HTTP (GET, POST, PUT, DELETE).
 
 export async function GET() {
-  const response = await fetch(`${config.apiUrl}/database.json`);
+  const response = await fetch(`${config.apiUrl}/database.json`, {
+    cache: 'force-cache',
+  });
   const data = await response.json();
   const moviesList = data.moviesList;
 
@@ -25,7 +27,9 @@ export async function GET() {
     price: 100,
   }));
   // Zwróć dane jako odpowiedź JSON
-  return NextResponse.json(moviesWithCategory);
+  return NextResponse.json(moviesWithCategory, {
+    headers: { 'Cache-Control': 'public, max-age=0, must-revalidate' },
+  });
 }
 
 // export async function getMovies() {
