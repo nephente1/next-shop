@@ -7,8 +7,7 @@ import AddToCartButton from '@/app/components/AddToCartButton';
 import ErrorComponent from '@/app/components/ErrorComponent';
 import { config } from '@/config';
 
-
-export const dynamic = 'auto';
+export const dynamic = 'error'; // equivalent to getStaticProps() in the pages - force static rendering and cache
 export const dynamicParams = true;
 
 const ProductDetails = async ({ params }: { params: Promise<{ productId: string; category: string }> }) => {

@@ -3,6 +3,7 @@ import { MoviesTypes } from '../api/movies/route';
 import AddToCartButton from './AddToCartButton';
 import { ProductData } from '@/redux/cartStore';
 import { getBase64 } from '@/utils/getBase64';
+import Link from 'next/link';
 
 interface BoxItemPropsType {
   title: string;
@@ -19,7 +20,7 @@ export const BoxItem = async (props: BoxItemPropsType) => {
   const blurDataURL = await getBase64(image);
 
   return (
-    <a
+    <Link
       href={`/categories/${category}/${id}`}
       style={{ textDecoration: 'none' }}
       className="border border-sky-400 p-5 m-2 radius flex flex-wrap flex-col justify-between items-center shadow-lg basis-60 flex-auto cursor-pointer hover:border-pink-600"
@@ -45,6 +46,6 @@ export const BoxItem = async (props: BoxItemPropsType) => {
         <b>{price} $</b>
       </p>
       <AddToCartButton productDetails={productData} />
-    </a>
+    </Link>
   );
 };

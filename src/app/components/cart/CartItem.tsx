@@ -3,7 +3,7 @@ import { ADD_TO_CART, REDUCE_PRODUCT, REMOVE_FROM_CART } from '@/redux/cartStore
 import { itemsPrice } from '@/utils/utils';
 import { ProductData } from '@/redux/cartStore';
 import { Trash2, SquarePlus, SquareMinus } from 'lucide-react';
-import styles from '@/app/cart/Cart.module.css';
+import styles from './Cart.module.css';
 
 export default function CartItem({ productDetails }: { productDetails: ProductData }) {
   const dispatch = useDispatch();

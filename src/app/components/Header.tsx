@@ -14,8 +14,8 @@ const Header = () => {
   }, [cartItems]);
 
   return (
-    <header className="row-start-1 flex justify-center min-h-16 bg-sky-600">
-      <div className="container text-white justify-between items-center">
+    <header className="row-start-1 flex justify-center p-2 min-h-16 bg-sky-600 sm:p-0">
+      <div className="container text-white justify-between items-center gap-2">
         <Link className="flex gap-4 text-2xl text-white hover:text-pink-600" href="/">
           <div className="self-center relative w-40 h-8">
             <Image src="/next.svg" alt="Next.js logo" fill className="invert" priority />
@@ -26,9 +26,9 @@ const Header = () => {
           <Link className="nav relative flex" href="/">
             Main Page
           </Link>
-          <Link className="nav relative flex gap-2 w-36" href="/cart">
+          <Link className="nav flex gap-2 w-44" href="/cart">
             Shopping cart
-            <div className="rounded-full bg-pink-600 text-white text-center w-6 h-6 absolute top-0 -right-1">
+            <div className="rounded-full bg-pink-600 text-white text-center w-7 h-7 text-base leading-[1.8]">
               {getProductsAmount}
             </div>
           </Link>

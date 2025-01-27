@@ -5,8 +5,8 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/rootReducer';
 import { ProductData } from '@/redux/cartStore';
 import { useRouter } from 'next/navigation';
-import styles from './Cart.module.css';
 import CartItem from '../components/cart/CartItem';
+import styles from './CartPage.module.css';
 
 const CartPage = () => {
   const { cartData } = useSelector((state: RootState) => state.cartReducer);
@@ -30,7 +30,6 @@ const CartPage = () => {
     router.back();
   };
 
-  console.log(cartData);
   return (
     <>
       <div className="flex justify-between w-full">

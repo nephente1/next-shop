@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getCategories } from './api/api';
 import Image from 'next/image';
 
@@ -20,7 +21,7 @@ export default async function Home() {
     const categoryImage = categoriesWithImages.find((item: CategoryImage) => Object.keys(item)[0] === category);
     const imageSrc = categoryImage !== undefined ? categoryImage[category] : '';
     return (
-      <a
+      <Link
         key={i}
         href={`/categories/${category}`}
         style={{ textDecoration: 'none' }}
@@ -35,7 +36,7 @@ export default async function Home() {
         <div className="relative max-w-40 max-h-40 w-40 h-40 my-2">
           <Image src={imageSrc} alt={category} fill sizes="160px" className="object-contain" priority />
         </div>
-      </a>
+      </Link>
     );
   });
 

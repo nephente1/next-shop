@@ -1,14 +1,14 @@
 import BackButton from '@/app/components/BackButton';
-import { MoviesTypes } from '../../api/movies/route'; // Importuj funkcję GET
+import { MoviesTypes } from '../../api/movies/route';
 import { BoxItem } from '../../components/BoxItem';
 import { config } from '@/config';
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'error'; // equivalent to getStaticProps() in the pages - force static rendering and cache
 
-export const revalidate = 60; // Odświeżaj co 60 sekund
 const MoviesPage = async () => {
-  // const moviesList = await getMovies(); // Wywołanie funkcję getMovies (tylko w server components)
-  const response = await fetch(`${config.apiUrl}/api/movies`); // wywołanie poprzez api/movies/route
+  const response = await fetch(`${config.apiUrl}/api/movies`, {
+    cache: 'force-cache',
+  }); // wywołanie poprzez api/movies/route
   const moviesList = await response.json();
 
   const displayMovieslist = moviesList.map((el: MoviesTypes) => (

@@ -7,7 +7,6 @@ export async function GET(request: NextRequest) {
   const id = url.split('/').pop(); // Pobiera ostatni element z URL
 
   try {
-    // Pobierz dane z pliku public/database.json
     const response = await fetch(`${config.apiUrl}/database.json`, {
       cache: 'force-cache',
     });
@@ -16,9 +15,7 @@ export async function GET(request: NextRequest) {
     }
 
     const data = await response.json();
-    const moviesList = data.moviesList; // Zakładamy, że dane są w formacie { movies: [...] }
-
-    // Dodaj kategorię i cenę do każdego filmu
+    const moviesList = data.moviesList;
     const moviesWithCategory = moviesList.map((movie) => ({
       ...movie,
       category: 'movies',
@@ -28,9 +25,7 @@ export async function GET(request: NextRequest) {
     const movieItem = moviesWithCategory.find((movie) => movie.id === id);
 
     // Zwróć dane jako odpowiedź JSON
-    return NextResponse.json(movieItem, {
-      headers: { 'Cache-Control': 'public, max-age=0, must-revalidate' },
-    });
+    return NextResponse.json(movieItem);
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });

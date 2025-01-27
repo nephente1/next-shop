@@ -1,0 +1,49 @@
+.cartItem {
+  display: flex;
+  padding: 10px 0;
+  flex-wrap: nowrap;
+  border-top: 1px solid var(--lightDark);
+  width: 100%;
+}
+
+.cartItem:first-of-type {
+  font-weight: 700;
+}
+
+.itemName {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex: 1 1 300px;
+  white-space: wrap;
+  text-align: left;
+}
+
+.itemAmount {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 140px;
+  text-align: center;
+}
+
+.itemAmount span {
+  cursor: pointer;
+}
+
+.itemPrice {
+  width: 120px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.removeOption {
+  width: 100px;
+  text-align: center;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
