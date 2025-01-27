@@ -1,22 +1,25 @@
-import { getCategories, getCategoryProducts } from '@/app/api/api';
+import { getCategoryProducts } from '@/app/api/api';
 import BackButton from '@/app/components/BackButton';
 import { BoxItem } from '@/app/components/BoxItem';
 import ErrorComponent from '@/app/components/ErrorComponent';
 import { ProductData } from '@/redux/cartStore';
 
-export async function generateStaticParams() {
-  // Pobierz kategorie z API lub innego źródła danych
-  const categories = await getCategories();
+// export async function generateStaticParams() {
+//   // Pobierz kategorie z API lub innego źródła danych
+//   const categories: string[] = await getCategories();
 
-  // Zwróć tablicę obiektów z parametrami dla każdej kategorii
-  return categories.map((category) => ({
-    category: encodeURIComponent(category.slug), // Użyj encodeURIComponent dla bezpieczeństwa
-  }));
-}
+//   // Zwróć tablicę obiektów z parametrami dla każdej kategorii
+//   return categories.map((category) => ({
+//     params: category
+//   }));
+// }
 
-const CategoryPage = async ({ params }: { params: { category: string } }) => {
-  // const { category } = params;
+export const dynamic = 'error';
+export const dynamicParams = true;
+
+const CategoryPage = async ({ params }: { params: Promise<{ category: string }> }) => {
   const { category } = await params;
+
   const categoryName = await decodeURIComponent(category);
   const categoryProducts = await getCategoryProducts(category);
 
