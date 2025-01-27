@@ -11,7 +11,7 @@ export const instance = setupCache(
     },
   }),
   {
-    ttl: 1000 * 60 * 5, // Cache ważny przez 5 minut
+    ttl: 1000 * 60 * 30, // Cache ważny przez 30 minut / ttl (time-to-live)
   },
 );
 
