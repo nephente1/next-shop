@@ -14,7 +14,7 @@ import { ProductData } from '@/redux/cartStore';
 //   }));
 // }
 
-export const dynamic = 'force-static'; //Force static rendering and cache the data of a layout or page
+export const dynamic = 'auto';
 export const dynamicParams = true;
 
 const CategoryPage = async ({ params }: { params: Promise<{ category: string }> }) => {
