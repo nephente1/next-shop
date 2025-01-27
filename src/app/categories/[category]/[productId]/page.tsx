@@ -7,6 +7,10 @@ import AddToCartButton from '@/app/components/AddToCartButton';
 import ErrorComponent from '@/app/components/ErrorComponent';
 import { config } from '@/config';
 
+
+export const dynamic = 'auto';
+export const dynamicParams = true;
+
 const ProductDetails = async ({ params }: { params: Promise<{ productId: string; category: string }> }) => {
   const { productId, category } = await params;
   const mainProduct = await getProduct(productId);
