@@ -11,8 +11,8 @@ const montserratSans = Montserrat({
   weight: ['400', '500', '700'],
   style: ['normal'],
   display: 'swap', // Zapewnia natychmiastowe wyświetlenie tekstu z czcionką zastępczą
-  preload: true, // Wstępne ładowanie czcionki (domyślnie true)
   fallback: ['sans-serif'],
+  preload: false,
 });
 
 export const metadata: Metadata = {

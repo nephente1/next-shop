@@ -27,10 +27,6 @@
   text-align: center;
 }
 
-.itemAmount span {
-  cursor: pointer;
-}
-
 .itemPrice {
   width: 120px;
   text-align: center;

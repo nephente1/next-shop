@@ -1,6 +1,6 @@
 import BackButton from '@/app/components/BackButton';
-import { MoviesTypes } from '../../api/movies/route';
-import { BoxItem } from '../../components/BoxItem';
+import { MoviesTypes } from '../../../api/movies/route';
+import { BoxItem } from '../../../components/BoxItem';
 import { config } from '@/config';
 
 export const dynamic = 'error'; // equivalent to getStaticProps() in the pages - force static rendering and cache

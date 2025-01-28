@@ -5,8 +5,12 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/rootReducer';
 import { ProductData } from '@/redux/cartStore';
 import { useRouter } from 'next/navigation';
-import CartItem from '../components/cart/CartItem';
-import styles from './CartPage.module.css';
+
+import dynamic from 'next/dynamic';
+const CartItem = dynamic(() => import('../../components/cart/CartItem'), {
+  // zapobiega niepotrzebnemu preloadingowi stylów do tego komponentu, które nie są potrzebne od razu
+  ssr: false,
+});
 
 const CartPage = () => {
   const { cartData } = useSelector((state: RootState) => state.cartReducer);
@@ -40,24 +44,24 @@ const CartPage = () => {
       </div>
 
       <div>
-        <div className={styles.cartItem}>
-          <div className={styles.itemName}>Product name</div>
-          <div className={styles.itemAmount}>Amount</div>
-          <div className={styles.itemPrice}>Price</div>
-          <div className={styles.removeOption}>Remove item</div>
+        <div className="cartItem">
+          <div className="itemName">Product name</div>
+          <div className="itemAmount">Amount</div>
+          <div className="itemPrice">Price</div>
+          <div className="removeOption">Remove item</div>
         </div>
         {cartData.length ? (
           <>
             {renderCartItems}
-            <div className={styles.cartItem}>
-              <div className={styles.itemName}>
+            <div className="cartItem">
+              <div className="itemName">
                 <b>Sum up value:</b>
               </div>
-              <div className={styles.itemAmount} />
-              <div className={styles.itemPrice}>
+              <div className="itemAmount" />
+              <div className="itemPrice">
                 <b>{getTotalCost} $</b>
               </div>
-              <div className={styles.removeOption} />
+              <div className="removeOption" />
             </div>
             <button onClick={cartRedirection}>Finalize order</button>
           </>

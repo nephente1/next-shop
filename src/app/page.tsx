@@ -22,6 +22,7 @@ export default async function Home() {
     const imageSrc = categoryImage !== undefined ? categoryImage[category] : '';
     return (
       <Link
+        prefetch={false}
         key={i}
         href={`/categories/${category}`}
         style={{ textDecoration: 'none' }}
