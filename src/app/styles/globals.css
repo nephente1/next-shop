@@ -12,10 +12,11 @@
   margin: 0;
 }
 
+
 @layer components {
-  .container {
+  /* .container {
     @apply flex gap-6 flex-wrap max-w-5xl w-full px-5;
-  }
+  } */
   a {
     @apply font-medium no-underline text-sky-600 hover:text-pink-600;
   }

@@ -1,4 +1,4 @@
-import ErrorComponent from "./components/ErrorComponent";
+import ErrorComponent from './components/ErrorComponent';
 
 export const metadata = {
   title: '404 - Page not found',

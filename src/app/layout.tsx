@@ -33,7 +33,7 @@ export default function RootLayout({
       >
         <ReduxProvider>
           <Header />
-          <div className="flex flex-col w-full justify-items-start items-center">
+          <div className="flex flex-col w-full justify-start items-center row-start-2">
             <main className="container flex-col mt-6">{children}</main>
           </div>
           <Footer />

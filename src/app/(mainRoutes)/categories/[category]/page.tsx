@@ -1,27 +1,42 @@
-import { getCategoryProducts } from '@/app/api/api';
+import { getCategoryProducts, getCategories } from '@/app/api/api';
 import BackButton from '@/app/components/BackButton';
 import { BoxItem } from '@/app/components/BoxItem';
 import ErrorComponent from '@/app/components/ErrorComponent';
 import { ProductData } from '@/redux/cartStore';
 
-// export async function generateStaticParams() {
-//   // Pobierz kategorie z API lub innego źródła danych
-//   const categories: string[] = await getCategories();
+export async function generateStaticParams() {
+  try {
+    console.log('Fetching categories...');
 
-//   // Zwróć tablicę obiektów z parametrami dla każdej kategorii
-//   return categories.map((category) => ({
-//     params: category
-//   }));
-// }
+    // Pobieramy kategorie, wymuszając brak cache (aby uniknąć pustych danych)
+    const categories: string[] = await getCategories();
 
+    if (!categories || categories.length === 0) {
+      console.error('❌ No categories found!');
+      return [];
+    }
+
+    console.log('✅ Generated categories:', categories);
+
+    return categories.map((category) => ({
+      category, // 👈 Poprawna struktura zwracanych wartości
+    }));
+  } catch (error) {
+    console.error('🚨 Error fetching categories:', error);
+    return [];
+  }
+}
+
+// 🔹 NOWE: Next.js 15.1.6 zaleca `revalidate` zamiast `dynamic`
+// export const revalidate = false; // Strona generowana statycznie i nie odświeża się automatycznie
 export const dynamic = 'error'; // equivalent to getStaticProps() in the pages - force static rendering and cache
-export const dynamicParams = true;
+export const dynamicParams = false; // ❌ Jeśli kategoria nie istnieje, Next.js zwróci 404
 
 const CategoryPage = async ({ params }: { params: Promise<{ category: string }> }) => {
   const { category } = await params;
 
-  const categoryName = await decodeURIComponent(category);
   const categoryProducts = await getCategoryProducts(category);
+  const categoryName = await decodeURIComponent(category);
 
   const displayCategoryProducts = categoryProducts.map((el: ProductData) => (
     <BoxItem
@@ -35,9 +50,9 @@ const CategoryPage = async ({ params }: { params: Promise<{ category: string }> 
     />
   ));
 
-  if (categoryName !== categoryProducts?.map((el: ProductData) => el.category)[0]) {
-    return <ErrorComponent subject="category" />;
-  }
+  // if (categoryName !== categoryProducts?.map((el: ProductData) => el.category)[0]) {
+  //   return <ErrorComponent subject="category" />;
+  // }
 
   return (
     <>

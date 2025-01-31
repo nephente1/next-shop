@@ -14,8 +14,8 @@ const Header = () => {
   }, [cartItems]);
 
   return (
-    <header className="row-start-1 flex justify-center p-2 min-h-16 bg-sky-600 sm:p-0">
-      <div className="container text-white justify-between items-center gap-2">
+    <header className="row-start-1 flex justify-center p-2 h-16 bg-sky-600 sm:p-0">
+      <div className="flex container text-white justify-between items-center gap-2">
         <Link className="flex gap-4 text-2xl text-white hover:text-pink-600" href="/">
           <div className="self-center relative w-40 h-8">
             <Image src="/next.svg" alt="Next.js logo" fill className="invert" priority />
