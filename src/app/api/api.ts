@@ -1,43 +1,89 @@
-import Axios, { AxiosInstance } from 'axios';
-import { setupCache } from 'axios-cache-interceptor';
+import axios from 'axios';
 
 export const url = 'https://fakestoreapi.com';
 
-// Tworzymy instancję axiosa z cache
-export const instance: AxiosInstance = Axios.create({
+// Create axios instance with base configuration
+const axiosInstance = axios.create({
   baseURL: url,
   headers: {
     'Content-Type': 'application/json',
   },
 });
 
-const axios = setupCache(instance, { ttl: 1000 * 60 * 30 });
-
-// Dodajemy adapter cache do instancji axiosa
-// instance.defaults.adapter = (cache as any).adapter;
-
 // Getting all categories from fake store API
 export const getCategories = async () => {
-  // const res = await fetch(`${url}/products/categories`, {
-  //   cache: 'force-cache',
-  // });
-  // const data = await res.json();
-  const { data } = await axios.get(`/products/categories`);
-  return data;
+  try {
+    const res = await fetch(`${url}/products/categories`, {
+      next: {
+        revalidate: 3600, // Cache for 1 hour
+        tags: ['categories'], // Add cache tag
+      },
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      // Fallback to axios if fetch fails
+      const { data } = await axiosInstance.get('/products/categories');
+      return data;
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error('Failed to fetch categories:', error);
+    return [];
+  }
 };
 
-// Getting all produts in a specfic category from fake store API
+// Getting all products in a specific category from fake store API
 export const getCategoryProducts = async (categoryName: string) => {
-  const { data } = await axios.get(`/products/category/${categoryName}`);
-  // const res = await fetch(`${url}/products/category/${categoryName}`, {
-  //   cache: 'force-cache',
-  // });
-  // const data = await res.json();
-  return data;
+  try {
+    const res = await fetch(`${url}/products/category/${categoryName}`, {
+      next: {
+        revalidate: 3600,
+        tags: [`category-${categoryName}`], // Add unique cache tag per category
+      },
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      // Fallback to axios if fetch fails
+      const { data } = await axiosInstance.get(`/products/category/${categoryName}`);
+      return data;
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error(`Failed to fetch products for category ${categoryName}:`, error);
+    return [];
+  }
 };
 
 // Getting specific product by id
 export const getProduct = async (id: string) => {
-  const { data } = await axios.get(`/products/${id}`);
-  return data;
+  try {
+    const res = await fetch(`${url}/products/${id}`, {
+      next: {
+        revalidate: 3600,
+        tags: [`product-${id}`], // Add unique cache tag per product
+      },
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      // Fallback to axios if fetch fails
+      const { data } = await axiosInstance.get(`/products/${id}`);
+      return data;
+    }
+
+    return res.json();
+  } catch (error) {
+    console.error(`Failed to fetch product ${id}:`, error);
+    return null;
+  }
 };

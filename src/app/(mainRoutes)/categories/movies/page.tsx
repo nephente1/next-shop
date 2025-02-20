@@ -3,12 +3,15 @@ import { MoviesTypes } from '../../../api/movies/route';
 import { BoxItem } from '../../../components/BoxItem';
 import { config } from '@/config';
 
-export const dynamic = 'error';
+// Zamiast dynamic='error' używamy revalidate
+export const revalidate = 3600; // Cache na poziomie strony
 
 async function getMovies() {
   try {
     const response = await fetch(`${config.apiUrl}/api/movies`, {
-      next: { revalidate: 3600 }, // revalidate every hour
+      next: { 
+        revalidate: 3600, // Cache na poziomie fetch
+      },
       headers: {
         Accept: 'application/json',
       },

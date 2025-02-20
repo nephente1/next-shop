@@ -37,11 +37,8 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Error loading movies:', error);
-    return NextResponse.json(
-      { error: 'Failed to load movies' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: 'Failed to load movies' }, { status: 500 });
   }
 }
 
-export const dynamic = 'force-dynamic';
+// export const dynamic = 'force-dynamic';
