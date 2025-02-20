@@ -3,17 +3,39 @@ import { MoviesTypes } from '../../../api/movies/route';
 import { BoxItem } from '../../../components/BoxItem';
 import { config } from '@/config';
 
-export const dynamic = 'error'; // equivalent to getStaticProps() in the pages - force static rendering and cache
+export const dynamic = 'error';
+
+async function getMovies() {
+  try {
+    const response = await fetch(`${config.apiUrl}/api/movies`, {
+      next: { revalidate: 3600 }, // revalidate every hour
+      headers: {
+        Accept: 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`API error: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Failed to fetch movies:', error);
+    return [];
+  }
+}
 
 const MoviesPage = async () => {
-  const response = await fetch(`${config.apiUrl}/api/movies`, {
-    cache: 'force-cache',
-  }); // wywołanie poprzez api/movies/route
-  if (!response.ok) {
-    console.error('Błąd odpowiedzi API', await response.text());
-    throw new Error(`API error: ${response.status}`);
+  const moviesList = await getMovies();
+
+  if (!moviesList || moviesList.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center p-4">
+        <h2 className="text-2xl text-sky-700 mb-4">No movies available</h2>
+        <BackButton />
+      </div>
+    );
   }
-  const moviesList = await response.json();
 
   const displayMovieslist = moviesList.map((el: MoviesTypes) => (
     <BoxItem
@@ -34,7 +56,7 @@ const MoviesPage = async () => {
         <BackButton />
       </div>
 
-      <div className={'flex flex-wrap justify-center mb-4'}>{displayMovieslist}</div>
+      <div className="flex flex-wrap justify-center mb-4">{displayMovieslist}</div>
     </>
   );
 };

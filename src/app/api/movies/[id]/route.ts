@@ -1,51 +1,36 @@
-// GET /api/movies/:id
-import { config } from '@/config';
 import { NextRequest, NextResponse } from 'next/server';
+import path from 'path';
+import fs from 'fs/promises';
 
 export async function GET(request: NextRequest) {
   const url = request.url;
-  const id = url.split('/').pop(); // Pobiera ostatni element z URL
+  const id = url.split('/').pop();
 
   try {
-    const response = await fetch(`${config.apiUrl}/database.json`, {
-      cache: 'force-cache',
-    });
-    if (!response.ok) {
-      throw new Error('Failed to fetch data');
-    }
+    // Read the JSON file from the public directory
+    const jsonPath = path.join(process.cwd(), 'public', 'database.json');
+    const fileContents = await fs.readFile(jsonPath, 'utf8');
+    const data = JSON.parse(fileContents);
 
-    const data = await response.json();
     const moviesList = data.moviesList;
-    const moviesWithCategory = moviesList.map((movie) => ({
+    const moviesWithCategory = moviesList.map((movie: any) => ({
       ...movie,
       category: 'movies',
       price: 100,
     }));
 
-    const movieItem = moviesWithCategory.find((movie) => movie.id === id);
+    const movieItem = moviesWithCategory.find((movie: any) => movie.id === id);
 
-    // Zwróć dane jako odpowiedź JSON
-    return NextResponse.json(movieItem);
+    if (!movieItem) {
+      return NextResponse.json({ error: 'Movie not found' }, { status: 404 });
+    }
+
+    // Add cache headers for better performance
+    const response = NextResponse.json(movieItem);
+    response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+    return response;
   } catch (error) {
     console.error('Error:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-
-  // // Dodaj kategorię i cenę do każdego filmu
-  // const moviesWithCategory = moviesList.map((movie) => ({
-  //   ...movie,
-  //   category: 'movies',
-  //   price: 100,
-  // }));
-
-  // const movieItem = moviesWithCategory.find((movie) => movie.id === id);
-
-  // // Jeśli film nie został znaleziony, zwróć błąd 404 - w tym wypadku obsługuje to plikiem error.tsx w folderze [productId]
-  // // if (!movieItem) {
-  // //   return NextResponse.json({ error: 'Movie not found' }, { status: 404 });
-  // // }
-
-  // const response = NextResponse.json(movieItem);
-  // response.headers.set('Cache-Control', 'public, max-age=60');
-  // return response;
 }
