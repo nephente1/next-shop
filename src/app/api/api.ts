@@ -1,3 +1,4 @@
+import { config } from '@/config';
 import axios from 'axios';
 
 export const url = 'https://fakestoreapi.com';
@@ -87,3 +88,20 @@ export const getProduct = async (id: string) => {
     return null;
   }
 };
+
+export async function getMovieProduct(productId: string) {
+  try {
+    const response = await fetch(`${config.apiUrl}/api/movies/${productId}`, {
+      next: { revalidate: 3600 },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch movie: ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('Error fetching movie:', error);
+    return null;
+  }
+}

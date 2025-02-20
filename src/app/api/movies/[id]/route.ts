@@ -1,36 +1,54 @@
+import { config } from '@/config';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 import fs from 'fs/promises';
 
-export async function GET(request: NextRequest) {
-  const url = request.url;
-  const id = url.split('/').pop();
+// Add caching configuration
+export const revalidate = 3600; // Cache for 1 hour
 
+export async function GET(request: NextRequest) {
   try {
-    // Read the JSON file from the public directory
+    // Get ID from the URL
+    const id = request.url.split('/').pop();
+
+    if (!id) {
+      return NextResponse.json({ error: 'Movie ID is required' }, { status: 400 });
+    }
+
+    // Read the JSON file from public directory
     const jsonPath = path.join(process.cwd(), 'public', 'database.json');
     const fileContents = await fs.readFile(jsonPath, 'utf8');
     const data = JSON.parse(fileContents);
 
-    const moviesList = data.moviesList;
-    const moviesWithCategory = moviesList.map((movie: any) => ({
-      ...movie,
-      category: 'movies',
-      price: 100,
-    }));
+    if (!data.moviesList || !Array.isArray(data.moviesList)) {
+      throw new Error('Invalid database structure');
+    }
 
-    const movieItem = moviesWithCategory.find((movie: any) => movie.id === id);
+    // Find the specific movie
+    const movie = data.moviesList.find((movie: any) => movie.id === id);
 
-    if (!movieItem) {
+    if (!movie) {
       return NextResponse.json({ error: 'Movie not found' }, { status: 404 });
     }
 
-    // Add cache headers for better performance
-    const response = NextResponse.json(movieItem);
-    response.headers.set('Cache-Control', 'public, max-age=31536000, immutable');
+    // Add category and price to the movie
+    const movieWithDetails = {
+      ...movie,
+      category: 'movies',
+      price: 100,
+    };
+
+    // Return the response with cache headers
+    const response = NextResponse.json(movieWithDetails);
+    response.headers.set('Cache-Control', 'public, max-age=3600, s-maxage=3600');
+    
     return response;
+
   } catch (error) {
-    console.error('Error:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+    console.error('Error fetching movie:', error);
+    return NextResponse.json(
+      { error: 'Internal Server Error' }, 
+      { status: 500 }
+    );
   }
 }
