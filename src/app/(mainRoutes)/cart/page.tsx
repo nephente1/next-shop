@@ -36,7 +36,7 @@ const CartPage = () => {
 
   return (
     <>
-      <div className="flex justify-between w-full">
+      <div className="flex flex-1 flex-row justify-between w-full">
         <h2 className="text-2xl text-sky-700 capitalize mb-2 font-semibold">Full cart</h2>
         <button className="button" onClick={handleBackClick}>
           back

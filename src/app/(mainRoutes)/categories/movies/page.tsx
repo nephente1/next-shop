@@ -9,6 +9,10 @@ const MoviesPage = async () => {
   const response = await fetch(`${config.apiUrl}/api/movies`, {
     cache: 'force-cache',
   }); // wywołanie poprzez api/movies/route
+  if (!response.ok) {
+    console.error('Błąd odpowiedzi API', await response.text());
+    throw new Error(`API error: ${response.status}`);
+  }
   const moviesList = await response.json();
 
   const displayMovieslist = moviesList.map((el: MoviesTypes) => (
