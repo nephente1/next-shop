@@ -8,7 +8,7 @@ import ErrorComponent from '@/app/components/ErrorComponent';
 
 // Replace dynamic with revalidate
 // export const dynamic = 'error'; // equivalent to getStaticProps() in the pages - force static rendering and cache
-export const revalidate = 3600; // Cache for 1 hour
+export const revalidate = 60; // Cache for 60s
 export const dynamicParams = true;
 
 const ProductDetails = async ({ params }: { params: Promise<{ productId: string; category: string }> }) => {

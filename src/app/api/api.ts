@@ -16,7 +16,7 @@ export const getCategories = async () => {
   try {
     const res = await fetch(`${url}/products/categories`, {
       next: {
-        revalidate: 3600, // Cache for 1 hour
+        revalidate: 60, // Cache for 1 hour
         tags: ['categories'], // Add cache tag
       },
       headers: {
@@ -42,7 +42,7 @@ export const getCategoryProducts = async (categoryName: string) => {
   try {
     const res = await fetch(`${url}/products/category/${categoryName}`, {
       next: {
-        revalidate: 3600,
+        revalidate: 60,
         tags: [`category-${categoryName}`], // Add unique cache tag per category
       },
       headers: {
@@ -68,7 +68,7 @@ export const getProduct = async (id: string) => {
   try {
     const res = await fetch(`${url}/products/${id}`, {
       next: {
-        revalidate: 3600,
+        revalidate: 60,
         tags: [`product-${id}`], // Add unique cache tag per product
       },
       headers: {

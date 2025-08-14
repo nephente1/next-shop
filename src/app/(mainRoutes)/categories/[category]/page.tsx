@@ -5,12 +5,15 @@ import ErrorComponent from '@/app/components/ErrorComponent';
 import { ProductData } from '@/redux/cartStore';
 
 // 🔹 NOWE: Next.js 15.1.6 zaleca `revalidate` zamiast `dynamic`
-export const revalidate = 3600; // 1 hour cache // Strona generowana statycznie i nie odświeża się automatycznie
+export const revalidate = 60; // 60s cache // Strona generowana statycznie i nie odświeża się automatycznie
 // export const dynamic = 'error'; // equivalent to getStaticProps() in the pages - force static rendering and cache
 
 // Konfiguracja cachowania
-export const fetchCache = 'force-cache'; // Wymusza użycie cache
+// export const fetchCache = 'force-cache'; // Wymusza użycie cache
+export const dynamic = 'force-dynamic'; // Wyłącza cache całkowicie, ane zawsze świeże
 export const dynamicParams = false; // ❌ Jeśli kategoria nie istnieje, Next.js zwróci 404
+
+// export const dynamicParams = true;
 
 // Typ dla props
 type CategoryPageProps = {

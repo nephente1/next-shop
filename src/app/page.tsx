@@ -14,6 +14,8 @@ const categoriesWithImages: CategoryImage[] = [
   { "men's clothing": '/images/men.webp' },
 ];
 
+export const dynamic = 'force-dynamic'; // Wyłącza cache całkowicie
+
 export default async function Home() {
   const categories = await getCategories();
 
