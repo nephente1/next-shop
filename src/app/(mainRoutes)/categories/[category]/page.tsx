@@ -4,16 +4,10 @@ import { BoxItem } from '@/app/components/BoxItem';
 import ErrorComponent from '@/app/components/ErrorComponent';
 import { ProductData } from '@/redux/cartStore';
 
-// 🔹 NOWE: Next.js 15.1.6 zaleca `revalidate` zamiast `dynamic`
-export const revalidate = 60; // 60s cache // Strona generowana statycznie i nie odświeża się automatycznie
-// export const dynamic = 'error'; // equivalent to getStaticProps() in the pages - force static rendering and cache
-
-// Konfiguracja cachowania
-// export const fetchCache = 'force-cache'; // Wymusza użycie cache
-export const dynamic = 'force-dynamic'; // Wyłącza cache całkowicie, ane zawsze świeże
-export const dynamicParams = false; // ❌ Jeśli kategoria nie istnieje, Next.js zwróci 404
-
-// export const dynamicParams = true;
+// ISR - odświeżaj strony co 60 sekund
+export const revalidate = 60;
+// dynamicParams = true (domyślnie) - nieznane ścieżki są renderowane dynamicznie zamiast 404
+export const dynamicParams = true;
 
 // Typ dla props
 type CategoryPageProps = {

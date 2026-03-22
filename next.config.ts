@@ -1,11 +1,15 @@
 import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
   images: {
-    domains: ['fakestoreapi.com'], // Dodaj hostname'y, z których chcesz ładować obrazy
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'fakestoreapi.com',
+      },
+    ],
   },
-  compress: true, // Włącza kompresję dla lepszej wydajności
+  compress: true,
 };
 
 export default nextConfig;

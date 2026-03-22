@@ -14,7 +14,11 @@ const axiosInstance = axios.create({
 // Getting all categories from fake store API
 export const getCategories = async () => {
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+
     const res = await fetch(`${url}/products/categories`, {
+      signal: controller.signal,
       next: {
         revalidate: 60, // Cache for 1 hour
         tags: ['categories'], // Add cache tag
@@ -23,6 +27,8 @@ export const getCategories = async () => {
         Accept: 'application/json',
       },
     });
+
+    clearTimeout(timeout);
 
     if (!res.ok) {
       // Fallback to axios if fetch fails
@@ -40,7 +46,11 @@ export const getCategories = async () => {
 // Getting all products in a specific category from fake store API
 export const getCategoryProducts = async (categoryName: string) => {
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+
     const res = await fetch(`${url}/products/category/${categoryName}`, {
+      signal: controller.signal,
       next: {
         revalidate: 60,
         tags: [`category-${categoryName}`], // Add unique cache tag per category
@@ -49,6 +59,8 @@ export const getCategoryProducts = async (categoryName: string) => {
         Accept: 'application/json',
       },
     });
+
+    clearTimeout(timeout);
 
     if (!res.ok) {
       // Fallback to axios if fetch fails
@@ -66,7 +78,11 @@ export const getCategoryProducts = async (categoryName: string) => {
 // Getting specific product by id
 export const getProduct = async (id: string) => {
   try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 8000);
+
     const res = await fetch(`${url}/products/${id}`, {
+      signal: controller.signal,
       next: {
         revalidate: 60,
         tags: [`product-${id}`], // Add unique cache tag per product
@@ -75,6 +91,8 @@ export const getProduct = async (id: string) => {
         Accept: 'application/json',
       },
     });
+
+    clearTimeout(timeout);
 
     if (!res.ok) {
       // Fallback to axios if fetch fails
