@@ -22,9 +22,7 @@ export async function generateStaticParams() {
       return [];
     }
 
-    return categories.map((category) => ({
-      category: category.toLowerCase(),
-    }));
+    return categories.map((c) => ({ category: c.slug }));
   } catch (error) {
     console.error('Failed to generate static params:', error);
     return [];
@@ -35,6 +33,11 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
   try {
     const resolvedParams = await params;
     const categoryName = decodeURIComponent(resolvedParams.category);
+    // Konwertuj slug na czytelną nazwę (np. 'mens-shirts' → 'Mens Shirts')
+    const displayName = categoryName
+      .split('-')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ');
 
     const categoryProducts = await getCategoryProducts(categoryName);
 
@@ -57,7 +60,7 @@ const CategoryPage = async ({ params }: CategoryPageProps) => {
     return (
       <>
         <div className="flex justify-between w-full">
-          <h2 className="text-2xl text-sky-700 capitalize mb-2 font-semibold">{categoryName}</h2>
+          <h2 className="text-2xl text-sky-700 capitalize mb-2 font-semibold">{displayName}</h2>
           <BackButton />
         </div>
         <div className="flex flex-wrap justify-center">{displayCategoryProducts}</div>

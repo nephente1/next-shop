@@ -1,74 +1,60 @@
 import { config } from '@/config';
-import axios from 'axios';
 
-export const url = 'https://fakestoreapi.com';
+export const url = 'https://dummyjson.com';
 
-// Create axios instance with base configuration
-const axiosInstance = axios.create({
-  baseURL: url,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+export type CategoryType = {
+  slug: string;
+  name: string;
+};
+
+type RawDummyProduct = {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  price: number;
+  thumbnail: string;
+};
+
+// Normalize DummyJSON product shape to match our ProductData interface
+const normalizeProduct = (product: RawDummyProduct) => ({
+  id: String(product.id),
+  title: product.title,
+  description: product.description,
+  category: product.category,
+  price: product.price,
+  image: product.thumbnail,
 });
 
-// Getting all categories from fake store API
-export const getCategories = async () => {
+// Getting all categories from DummyJSON API
+export const getCategories = async (): Promise<CategoryType[]> => {
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-
     const res = await fetch(`${url}/products/categories`, {
-      signal: controller.signal,
-      next: {
-        revalidate: 60, // Cache for 1 hour
-        tags: ['categories'], // Add cache tag
-      },
-      headers: {
-        Accept: 'application/json',
-      },
+      next: { revalidate: 60, tags: ['categories'] },
     });
 
-    clearTimeout(timeout);
+    if (!res.ok) return [];
 
-    if (!res.ok) {
-      // Fallback to axios if fetch fails
-      const { data } = await axiosInstance.get('/products/categories');
-      return data;
-    }
-
-    return res.json();
+    const data: Array<{ slug: string; name: string; url: string }> = await res.json();
+    return data.map(({ slug, name }) => ({ slug, name }));
   } catch (error) {
     console.error('Failed to fetch categories:', error);
     return [];
   }
 };
 
-// Getting all products in a specific category from fake store API
+// Getting all products in a specific category from DummyJSON API
 export const getCategoryProducts = async (categoryName: string) => {
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-
-    const res = await fetch(`${url}/products/category/${categoryName}`, {
-      signal: controller.signal,
-      next: {
-        revalidate: 60,
-        tags: [`category-${categoryName}`], // Add unique cache tag per category
-      },
-      headers: {
-        Accept: 'application/json',
-      },
+    // limit=100 aby pobrać wszystkie produkty (domyślny limit DummyJSON to 30)
+    const res = await fetch(`${url}/products/category/${categoryName}?limit=100`, {
+      next: { revalidate: 60, tags: [`category-${categoryName}`] },
     });
 
-    clearTimeout(timeout);
+    if (!res.ok) return [];
 
-    if (!res.ok) {
-      // Fallback to axios if fetch fails
-      const { data } = await axiosInstance.get(`/products/category/${categoryName}`);
-      return data;
-    }
-
-    return res.json();
+    const data = await res.json();
+    return (data.products || []).map(normalizeProduct);
   } catch (error) {
     console.error(`Failed to fetch products for category ${categoryName}:`, error);
     return [];
@@ -78,29 +64,14 @@ export const getCategoryProducts = async (categoryName: string) => {
 // Getting specific product by id
 export const getProduct = async (id: string) => {
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 8000);
-
     const res = await fetch(`${url}/products/${id}`, {
-      signal: controller.signal,
-      next: {
-        revalidate: 60,
-        tags: [`product-${id}`], // Add unique cache tag per product
-      },
-      headers: {
-        Accept: 'application/json',
-      },
+      next: { revalidate: 60, tags: [`product-${id}`] },
     });
 
-    clearTimeout(timeout);
+    if (!res.ok) return null;
 
-    if (!res.ok) {
-      // Fallback to axios if fetch fails
-      const { data } = await axiosInstance.get(`/products/${id}`);
-      return data;
-    }
-
-    return res.json();
+    const data = await res.json();
+    return normalizeProduct(data);
   } catch (error) {
     console.error(`Failed to fetch product ${id}:`, error);
     return null;
